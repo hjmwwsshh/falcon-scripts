@@ -9,8 +9,23 @@ cmds=(client_bc redis java dockerd zookeeper kafka orderer peer nginx)
 #获取进程pid
 
 hostname=`hostname`
-step=60
+step=10
 olddate=`date +%Y%m%d`
+
+###
+# use crontab instead of using `sleep` command in script especially when you want to use a shorter step
+# replace your path that store this script into ${PATH} 
+# sleep time in crontab depends on your step defined in this script
+#
+# crontab -e
+#
+# * * * * * /bin/bash ${PATH}/proc.sh
+# * * * * * sleep 10; /bin/bash ${PATH}/proc.sh
+# * * * * * sleep 20; /bin/bash ${PATH}/proc.sh
+# * * * * * sleep 30; /bin/bash ${PATH}/proc.sh
+# * * * * * sleep 40; /bin/bash ${PATH}/proc.sh
+# * * * * * sleep 50; /bin/bash ${PATH}/proc.sh
+###
 
 function send(){
     tags=$1  # port=$port   cmdline=$cmd
@@ -40,8 +55,6 @@ function send(){
     echo
 }
 
-while true; do
-
     for p in ${ports[@]}; do
         pid=`netstat -anp | grep ":$p " | grep LISTEN| awk '{print $7}' | awk -F"/" '{ print $1 }'|uniq`
         if [ "$pid" != "" ]; then
@@ -62,5 +75,3 @@ while true; do
         done
     done
 
-    sleep $step
-done
