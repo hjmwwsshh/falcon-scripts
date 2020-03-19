@@ -12,6 +12,7 @@ logdir=$1
 parent_dirs="/bgi/blockchain_data /bgi/kblockchain_data /bgi/redis_data /bgi/logs /bgi"
 
 hostname=`hostname`
+agent_host='http://127.0.0.1:1988/v1/push'
 step=60                                                            
 metric=",{\"endpoint\":\"$hostname\",\"metric\":\"du.bytes.used\",\"value\":%d,\"step\":$step,\"counterType\":\"GAUGE\",\"timestamp\":%d,\"tags\":\"mount=%s\"}"
 olddate=`date +%Y%m%d`
@@ -37,6 +38,6 @@ olddate=`date +%Y%m%d`
     fi
     echo $metrics >> ${logdir}/du.log
 
-    curl -X POST -d $metrics   http://192.168.29.244:1988/v1/push
+    curl -X POST -d $metrics  $agent_host
 
 
