@@ -2,8 +2,8 @@
 # use crontab
 # * * * * * /bin/bash /path/to/this/script/du.sh /path/to/this/script
 
-logdir=$1
-: ${logdir:=.}
+#logdir=$1
+#: ${logdir:=.}
 
 # 被监控的目录
 # dirs="/bgi/redis_data /bgi/docker_image_container"
@@ -15,7 +15,7 @@ hostname=`hostname`
 agent_host='http://127.0.0.1:1988/v1/push'
 step=60                                                            
 metric=",{\"endpoint\":\"$hostname\",\"metric\":\"du.bytes.used\",\"value\":%d,\"step\":$step,\"counterType\":\"GAUGE\",\"timestamp\":%d,\"tags\":\"mount=%s\"}"
-olddate=`date +%Y%m%d`
+#olddate=`date +%Y%m%d`
 
     # 获取指标
     > du.tmp
@@ -31,12 +31,12 @@ olddate=`date +%Y%m%d`
     fi
 
     # 保存日志,过一天更改日期
-    newdate=`date +%Y%m%d`
-    if [ $newdate != $olddate ];then
-        mv ${logdir}/du.log ${logdir}/du${olddate}.log
-        olddate=$newdate
-    fi
-    echo $metrics >> ${logdir}/du.log
+    #newdate=`date +%Y%m%d`
+    #if [ $newdate != $olddate ];then
+    #    mv ${logdir}/du.log ${logdir}/du${olddate}.log
+    #    olddate=$newdate
+    #fi
+    #echo $metrics >> ${logdir}/du.log
 
     curl -X POST -d $metrics  $agent_host
 
