@@ -1,4 +1,6 @@
 #!/bin/bash
+# use crontab
+# * * * * * /bin/bash /path/to/this/script/du.sh /path/to/this/script
 
 logdir=$1
 : ${logdir:=.}
@@ -13,7 +15,7 @@ hostname=`hostname`
 step=60                                                            
 metric=",{\"endpoint\":\"$hostname\",\"metric\":\"du.bytes.used\",\"value\":%d,\"step\":$step,\"counterType\":\"GAUGE\",\"timestamp\":%d,\"tags\":\"mount=%s\"}"
 olddate=`date +%Y%m%d`
-while true; do
+
     # 获取指标
     > du.tmp
     ts=`date +%s`
@@ -36,6 +38,5 @@ while true; do
     echo $metrics >> ${logdir}/du.log
 
     curl -X POST -d $metrics   http://192.168.29.244:1988/v1/push
-    sleep $step
-done
+
 
